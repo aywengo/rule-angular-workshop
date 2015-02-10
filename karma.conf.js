@@ -18,7 +18,8 @@ module.exports = function (config) {
             '2 - OOP/**/event_emitter/spec/*Spec.js',
             '2 - OOP/**/event_emitter/ee.js',
             '2 - OOP/code/new_operator/newOperator.js',
-            '2 - OOP/code/new_operator/**/*OpSpec.js'
+            '2 - OOP/code/new_operator/**/*OpSpec.js',
+            '1 - JavaScript Basics/code/quiz.js'
         ],
 
 
