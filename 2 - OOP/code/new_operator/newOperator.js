@@ -24,11 +24,4 @@
         }
         return obj;
 	};
-
-
-	//Example usage:
-	/*
-	var inst = global.rule.createClassInstance(MyClass, arg1, arg2, arg3);
-	*/
-
 }(window));
