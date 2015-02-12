@@ -7,22 +7,12 @@
 
 	EE = function () {
 		this.listeners = {};
-
-        return Object.create(EE.prototype, {
-            listeners: {
-                value: this.listeners
-            }
-        });
 	};
 
 	EE.prototype.on = function (eventName, listener, context) {
         var that = this;
 
-        if (typeof this.listeners === "undefined") {
-            this.listeners = {};
-        }
-
-        if (typeof this.listeners[eventName] === "undefined") {
+        if(!this.listeners[eventName]) {
             this.listeners[eventName] = [];
         }
 
@@ -30,7 +20,7 @@
         this.listeners[eventName].push(listenerData);
 
         return function () {
-            if (that.listeners && typeof that.listeners[eventName] !== "undefined") {
+            if (that.listeners && !!that.listeners[eventName]) {
                 for (var i = 0; i < that.listeners[eventName].length; i++) {
                     if (that.listeners[eventName][i] === listenerData) {
                         that.listeners[eventName].splice(i, 1);
