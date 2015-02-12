@@ -1,18 +1,18 @@
 (function (global) {
-	var EE;
+    var EE;
 
-	if (!global.rule) {
-		global.rule = {};
-	}
+    if (!global.rule) {
+        global.rule = {};
+    }
 
-	EE = function () {
-		this.listeners = {};
-	};
+    EE = function () {
+        this.listeners = {};
+    };
 
-	EE.prototype.on = function (eventName, listener, context) {
+    EE.prototype.on = function (eventName, listener, context) {
         var that = this;
 
-        if(!this.listeners[eventName]) {
+        if (!this.listeners[eventName]) {
             this.listeners[eventName] = [];
         }
 
@@ -20,18 +20,16 @@
         this.listeners[eventName].push(listenerData);
 
         return function () {
-            if (that.listeners && !!that.listeners[eventName]) {
-                for (var i = 0; i < that.listeners[eventName].length; i++) {
-                    if (that.listeners[eventName][i] === listenerData) {
-                        that.listeners[eventName].splice(i, 1);
-                        break;
-                    }
+            for (var i = 0; i < that.listeners[eventName].length; i++) {
+                if (that.listeners[eventName][i] === listenerData) {
+                    that.listeners[eventName].splice(i, 1);
+                    break;
                 }
             }
         }
-	};
+    };
 
-	EE.prototype.emit = function (eventName, data) {
+    EE.prototype.emit = function (eventName, data) {
         var args = Array.prototype.splice.call(arguments, data);
 
         if (typeof this.listeners[eventName] !== "undefined") {
@@ -55,6 +53,6 @@
 //
 //	ee.emit('test'); //nothing will execute
 
-	global.rule.EventEmitter = EE;
+    global.rule.EventEmitter = EE;
 
 }(window));
