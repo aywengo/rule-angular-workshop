@@ -76,7 +76,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	createCanvas = function (container, rows, colls) {
         var i, a, cellE1,
-            fakeELement = document.createDocumentFragment(),
+            fakeElement = document.createDocumentFragment(),
             baseCellE1 = document.createElement('div'), elements = [];
 
         baseCellE1.classList.add('cell');
@@ -87,13 +87,14 @@ window.addEventListener('DOMContentLoaded', function () {
                 cellE1.style.top = (i * 10) + 'px';
                 cellE1.style.left = (a * 10) + 'px';
 
-                cellE1.setAttribute('data-index', a + (rows * i));
+                var index = rows * i + a;
+                cellE1.setAttribute('data-index', index.toString());
 
                 elements.push(cellE1);
                 container.appendChild(cellE1);
             }
         }
-        container.appendChild(fakeELement);
+        container.appendChild(fakeElement);
         return elements;
 	};
 
@@ -113,7 +114,7 @@ window.addEventListener('DOMContentLoaded', function () {
 			index - COLS + 1,
 			index + COLS - 1,
 			index + COLS,
-			index + COLS + 1,
+            index + COLS + 1
 		].filter(function (cellInd) {
 			return cellInd >= 0 && cellInd < COLS * ROWS;
 		}).reduce(function (preValue, cellInd) {
@@ -139,5 +140,4 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	init(ROWS, COLS);
-
 });
