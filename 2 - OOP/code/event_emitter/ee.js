@@ -32,26 +32,10 @@
     EE.prototype.emit = function (eventName, data) {
         var args = Array.prototype.splice.call(arguments, data);
 
-        if (typeof this.listeners[eventName] !== "undefined") {
-            this.listeners[eventName].forEach(function (callback) {
-                callback.lstnr.apply(callback.cntx, args);
-            })
-        }
+        this.listeners[eventName].forEach(function (callback) {
+            callback.lstnr.apply(callback.cntx, args);
+        });
     };
-
-//	var ee = new EE();
-//  var customCtx = { key: value }
-//
-//	var removeListener = ee.on('test', function (arg1, arg2) {
-//		console.log(arg1, arg2); //1, 2
-//		console.log(this.key); //value
-//	}, customCtx);
-//
-//	ee.emit('test', 1, 2);
-//
-//	removeListener(); //removes my listener from the event emitter;
-//
-//	ee.emit('test'); //nothing will execute
 
     global.rule.EventEmitter = EE;
 
