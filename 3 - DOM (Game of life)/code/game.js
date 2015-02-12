@@ -14,10 +14,52 @@ window.addEventListener('DOMContentLoaded', function () {
 		cells;
 
 	cellProto = {
-
+        isAlive: function () {
+            return this.alive;
+        },
+        die: function () {
+            this.alive = false;
+            this.dom.classList.remove('alive');
+        },
+        live: function () {
+            this.alive = true;
+            this.dom.classList.add('alive');
+        }
 	};
 
 	appendListeners = function (container, startBtn, stopBtn, clearBtn) {
+        container.addEventListener('click', function (e) {
+            var cell;
+            if (isPending) {
+                return
+            }
+            if (e.target.classList.contains('cell')) {
+                cell = cells[e.target.dataset.index];
+
+                if (cell.isAlive()) {
+                    cell.die();
+                } else {
+                    cell.live();
+                }
+            }
+        });
+
+        startBtn.addEventListener('click', function (e) {
+            nextCycle(cells);
+            isPending = true;
+        });
+
+        stopBtn.addEventListener('click', function (e) {
+            window.clearTimeout(cycleTimeout);
+            isPending = false;
+        });
+
+        clearBtn.addEventListener('click', function (e) {
+            window.clearTimeout(cycleTimeout);
+            cells.forEach(function (cell) {
+                cell.die()
+            });
+        })
 
 	};
 
@@ -33,11 +75,33 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	createCanvas = function (container, rows, colls) {
+        var i, a, cellE1,
+            fakeELement = document.createDocumentFragment(),
+            baseCellE1 = document.createElement('div'), elements = [];
 
+        baseCellE1.classList.add('cell');
+
+        for (i = 0; i < rows; i++) {
+            for (a = 0; a < colls; a++) {
+                cellE1 = baseCellE1.cloneNode(true);
+                cellE1.style.top = (i * 10) + 'px';
+                cellE1.style.left = (a * 10) + 'px';
+
+                cellE1.setAttribute('data-index', a + (rows * i));
+
+                elements.push(cellE1);
+                container.appendChild(cellE1);
+            }
+        }
+        container.appendChild(fakeELement);
+        return elements;
 	};
 
 	createCell = function (domEl) {
-
+        var cell = Object.create(cellProto);
+        cell.alive = false;
+        cell.dom = domEl;
+        return cell;
 	};
 
 	getLiveNeighbours = function (index, cells) {
@@ -70,7 +134,6 @@ window.addEventListener('DOMContentLoaded', function () {
 					cells[index].live();
 				}
 			});
-
 			nextCycle(cells);
 		}, 150);
 	};
