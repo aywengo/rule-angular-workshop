@@ -14,53 +14,44 @@ window.addEventListener('DOMContentLoaded', function () {
 		cells;
 
 	cellProto = {
-        isAlive: function () {
-            return this.alive;
-        },
-        die: function () {
-            this.alive = false;
-            this.dom.classList.remove('alive');
-        },
-        live: function () {
-            this.alive = true;
-            this.dom.classList.add('alive');
-        }
+		isAlive: function () {
+			return this.alive;
+		},
+		live: function () {
+			this.alive = true;
+			this.dom.classList.add('alive');
+		},
+		die: function () {
+			this.alive = false;
+			this.dom.classList.remove('alive');
+		}
 	};
 
 	appendListeners = function (container, startBtn, stopBtn, clearBtn) {
-        container.addEventListener('click', function (e) {
-            var cell;
-            if (isPending) {
-                return
-            }
-            if (e.target.classList.contains('cell')) {
-                cell = cells[e.target.dataset.index];
+		container.addEventListener('click', function (e) {
+			var cell, clickedCellElement = e.target;
+			if (isPending) {
+				return;
+			}
+			if (clickedCellElement.classList.contains('cell')) {
+				cell = cells[clickedCellElement.dataset.index];
+				if (cell.isAlive()) {
+					cell.die();
+				} else {
+					cell.live();
+				}
+			}
+		});
 
-                if (cell.isAlive()) {
-                    cell.die();
-                } else {
-                    cell.live();
-                }
-            }
-        });
+		startBtn.addEventListener('click', function (e) {
+			nextCycle(cells);
+			isPending = true;
+		});
 
-        startBtn.addEventListener('click', function (e) {
-            nextCycle(cells);
-            isPending = true;
-        });
-
-        stopBtn.addEventListener('click', function (e) {
-            window.clearTimeout(cycleTimeout);
-            isPending = false;
-        });
-
-        clearBtn.addEventListener('click', function (e) {
-            window.clearTimeout(cycleTimeout);
-            cells.forEach(function (cell) {
-                cell.die()
-            });
-        })
-
+		stopBtn.addEventListener('click', function () {
+			window.clearTimeout(cycleTimeout);
+			isPending = false;
+		});
 	};
 
 	init = function (xRows, yRows) {
@@ -75,34 +66,33 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	createCanvas = function (container, rows, colls) {
-        var i, a, cellE1,
-            fakeElement = document.createDocumentFragment(),
-            baseCellE1 = document.createElement('div'), elements = [];
+		var i, a, cellEl,
+			fakeElement = document.createDocumentFragment(),
+			baseCellEl = document.createElement('div'), elements = [];
 
-        baseCellE1.classList.add('cell');
+		baseCellEl.classList.add('cell');
 
-        for (i = 0; i < rows; i++) {
-            for (a = 0; a < colls; a++) {
-                cellE1 = baseCellE1.cloneNode(true);
-                cellE1.style.top = (i * 10) + 'px';
-                cellE1.style.left = (a * 10) + 'px';
+		for (i = 0; i < rows; i++) {
+			for (a = 0; a < colls; a++) {
+				cellEl = baseCellEl.cloneNode(true);
+				cellEl.style.top = (i * 10) + 'px';
+				cellEl.style.left = (a * 10) + 'px';
+				cellEl.setAttribute('data-index', a + (rows * i));
 
-                var index = rows * i + a;
-                cellE1.setAttribute('data-index', index.toString());
+				elements.push(cellEl);
+				fakeElement.appendChild(cellEl);
+			}
+		}
 
-                elements.push(cellE1);
-                container.appendChild(cellE1);
-            }
-        }
-        container.appendChild(fakeElement);
-        return elements;
+		container.appendChild(fakeElement);
+		return elements;
 	};
 
 	createCell = function (domEl) {
-        var cell = Object.create(cellProto);
-        cell.alive = false;
-        cell.dom = domEl;
-        return cell;
+		var cell = Object.create(cellProto);
+		cell.alive = false;
+		cell.dom = domEl;
+		return cell;
 	};
 
 	getLiveNeighbours = function (index, cells) {
@@ -114,7 +104,7 @@ window.addEventListener('DOMContentLoaded', function () {
 			index - COLS + 1,
 			index + COLS - 1,
 			index + COLS,
-            index + COLS + 1
+			index + COLS + 1,
 		].filter(function (cellInd) {
 			return cellInd >= 0 && cellInd < COLS * ROWS;
 		}).reduce(function (preValue, cellInd) {
@@ -135,9 +125,11 @@ window.addEventListener('DOMContentLoaded', function () {
 					cells[index].live();
 				}
 			});
+
 			nextCycle(cells);
 		}, 150);
 	};
 
 	init(ROWS, COLS);
+
 });
