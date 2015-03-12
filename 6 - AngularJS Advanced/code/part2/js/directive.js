@@ -9,7 +9,7 @@ angular.module('myapp', []).directive('uamSearchField', function () {
 			// scope.value - binding
 			// scope.showClear - attribute
 			$scope.clear = function () {
-                $scpoe.value = '';
+                $scope.value = ' ';
 			};
 
 

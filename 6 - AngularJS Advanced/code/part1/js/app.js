@@ -1,11 +1,12 @@
 angular.module('myapp', ['ui.router']).config(function ($stateProvider) {
-    $stateProvider.state('users', {
+    $stateProvider
+        .state('users', {
         url: "/users",
         templateUrl: "partials/list.html",
         controller: 'UserListCtrl'
-    })
+        })
         .state('user', {
-            url: "/user::userId",
+            url: "/user/:userId",
             templateUrl: "partials/user.html",
             controller: 'UserCtrl'
         })
