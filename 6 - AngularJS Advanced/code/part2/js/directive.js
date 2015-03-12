@@ -2,13 +2,14 @@ angular.module('myapp', []).directive('uamSearchField', function () {
 	return {
 		restrict: 'E',
 		scope: {
-
+            value: '=',
+            showClear: '@'
 		},
 		controller: function ($scope) {
 			// scope.value - binding
 			// scope.showClear - attribute
 			$scope.clear = function () {
-
+                $scpoe.value = '';
 			};
 
 
